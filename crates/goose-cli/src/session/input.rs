@@ -433,7 +433,7 @@ fn print_help() {
 /clear - Clears the current chat history
 
 Navigation:
-Ctrl+C - Clear current line if text is entered, otherwise exit the session
+Ctrl+C - Add instructions or interrupt (press twice to exit)
 Ctrl+{newline_key} - Add a newline (configurable via GOOSE_CLI_NEWLINE_KEY)
 Up/Down arrows - Navigate through command history"
     );

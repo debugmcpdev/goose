@@ -10,7 +10,7 @@ pub fn get_cli_prompt() -> String {
 - /? or /help - Display help message
 
 Additional keyboard shortcuts:
-- Ctrl+C - Interrupt the current interaction (resets to before the interrupted request)
+- Ctrl+C - Add instructions or interrupt the current interaction (press twice to exit)
 - Ctrl+{newline_key} - Add a newline
 - Up/Down arrows - Navigate command history"
     )

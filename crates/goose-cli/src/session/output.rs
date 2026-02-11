@@ -112,7 +112,7 @@ pub struct ThinkingIndicator {
 impl ThinkingIndicator {
     pub fn show(&mut self) {
         let spinner = cliclack::spinner();
-        let hint = "  (Ctrl+C to interrupt)";
+        let hint = "  (Ctrl+C to add instructions or interrupt)";
         if Config::global()
             .get_param("RANDOM_THINKING_MESSAGES")
             .unwrap_or(true)
