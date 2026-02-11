@@ -1,6 +1,5 @@
 use std::env;
 
-/// The type of exporter to use for a signal.
 #[derive(Debug, Clone, PartialEq)]
 pub enum ExporterType {
     Otlp,
@@ -9,8 +8,6 @@ pub enum ExporterType {
 }
 
 impl ExporterType {
-    /// Parses an OTel exporter env var value into an ExporterType.
-    /// Empty string defaults to Otlp (the OTel SDK default).
     pub fn from_env_value(value: &str) -> Self {
         match value.to_lowercase().as_str() {
             "" | "otlp" => ExporterType::Otlp,
@@ -20,14 +17,11 @@ impl ExporterType {
     }
 }
 
-/// Per-signal configuration. Only contains exporter type since
-/// endpoint/timeout/sampler are handled by the SDK automatically.
 #[derive(Debug, Clone)]
 pub struct SignalConfig {
     pub exporter: ExporterType,
 }
 
-/// Raw env var detection result before config-file fallback.
 #[derive(Debug, PartialEq)]
 pub struct OtelEnv {
     pub traces_enabled: bool,
@@ -39,10 +33,7 @@ pub struct OtelEnv {
 }
 
 impl OtelEnv {
-    /// Detects OTel configuration from environment variables only.
-    /// Returns None if SDK is disabled or no signals are enabled.
     pub fn detect() -> Option<Self> {
-        // OTEL_SDK_DISABLED=true disables everything
         if env::var("OTEL_SDK_DISABLED")
             .ok()
             .is_some_and(|v| v.eq_ignore_ascii_case("true"))
@@ -85,7 +76,6 @@ impl OtelEnv {
     }
 }
 
-/// Resolved OTel configuration after env + config-file cascade.
 #[derive(Debug, Clone)]
 pub struct OtelConfig {
     pub traces: Option<SignalConfig>,
@@ -94,10 +84,8 @@ pub struct OtelConfig {
 }
 
 impl OtelConfig {
-    /// Detects OTel configuration with cascade: env vars → config file fallback.
     pub fn detect() -> Option<Self> {
         if let Some(env) = OtelEnv::detect() {
-            // Env vars are set — use them directly
             let traces = if env.traces_enabled {
                 Some(SignalConfig {
                     exporter: env.traces_exporter.unwrap_or(ExporterType::Otlp),
@@ -126,14 +114,11 @@ impl OtelConfig {
             });
         }
 
-        // Fall back to config file — if endpoint is present, enable all signals as OTLP
         Self::detect_from_config()
     }
 
-    /// Fallback: check goose config file for otel_exporter_otlp_endpoint.
     fn detect_from_config() -> Option<Self> {
         let config = crate::config::Config::global();
-        // If the config file has an endpoint, enable all three signals
         config
             .get_param::<String>("otel_exporter_otlp_endpoint")
             .ok()
