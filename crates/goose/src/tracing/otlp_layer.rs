@@ -257,7 +257,7 @@ pub fn create_otlp_metrics_filter() -> FilterFn<impl Fn(&Metadata<'_>) -> bool> 
     })
 }
 
-/// Creates a custom filter for OTLP metrics that captures:
+/// Creates a custom filter for OTLP logs that captures:
 /// - All events at WARN level and above
 pub fn create_otlp_logs_filter() -> FilterFn<impl Fn(&Metadata<'_>) -> bool> {
     FilterFn::new(|metadata: &Metadata<'_>| metadata.level() <= &Level::WARN)
